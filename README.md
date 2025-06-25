@@ -1,6 +1,6 @@
 # WebMorph Bootstrap
 
-**WebMorph** is a [Spring](https://docs.spring.io/spring-framework/reference/) that delivers deep,
+**WebMorph** is a [Spring](https://docs.spring.io/spring-framework/reference/) bootstrap that delivers deep,
 fine-grained runtime control via [ClassTransform](https://github.com/Lenni0451/Classtransform) and [Mixin](https://github.com/SpongePowered/Mixin) - no forks, no hacks required.
 
 <p align="center">
