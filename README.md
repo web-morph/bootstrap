@@ -54,6 +54,8 @@ tasks {
             )
         }
         mergeServiceFiles()
+        append("META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports")
+        append("META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.replacements")
     }
     build {
         dependsOn(shadowJar)
@@ -101,6 +103,8 @@ tasks.named('shadowJar') {
         attributes 'Main-Class': 'com.example.project.Application' // << Main class here
     }
     mergeServiceFiles()
+    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports'
+    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.replacements'
 }
 
 tasks.named('build') {
