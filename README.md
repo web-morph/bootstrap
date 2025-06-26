@@ -60,6 +60,9 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+    withType<JavaCompile> {
+        options.compilerArgs.add("-parameters")
+    }
     jar {
         enabled = false
     }
@@ -109,6 +112,10 @@ tasks.named('shadowJar') {
 
 tasks.named('build') {
     dependsOn tasks.named('shadowJar')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += '-parameters'
 }
 
 tasks.named('jar') {
