@@ -1,6 +1,6 @@
 var javaVersion = 17;
 group = "com.github.webmorph"
-version = "1.0.0"
+version = "1.0.1"
 
 plugins {
     id("java-library")
@@ -43,7 +43,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter:3.5.0")
 
     // Event
-    api("com.github.webmorph:eventbus:1.0.0")
+    api("com.github.webmorph:eventbus:1.0.3")
 
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.38")
