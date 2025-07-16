@@ -6,7 +6,7 @@ fine-grained runtime control via [ClassTransform](https://github.com/Lenni0451/C
 <p align="center">
 <a href="https://github.com/web-morph/bootstrap?tab=LGPL-3.0-1-ov-file"><img alt="License" src="https://img.shields.io/github/license/web-morph/bootstrap"></a>
 <a href="https://docs.gradle.org/8.14/release-notes.html"><img src="https://img.shields.io/badge/Gradle-8.14-brightgreen.svg?colorB=469C00&logo=gradle"></a>
-<a href="https://repo.jyraf.com/service/rest/v1/search/assets/download?sort=version&repository=maven-releases&maven.groupId=com.github.webmorph&maven.artifactId=bootstrap&maven.extension=jar&maven.classifier=" target="_blank"><img alt="Download" src="https://img.shields.io/nexus/r/com.github.webmorph/bootstrap?server=https%3A%2F%2Frepo.jyraf.com"></a>
+<a href="https://repo.billmarssoft.com/api/maven/latest/file/releases/com/github/webmorph/bootstrap?extension=jar" target="_blank"><img alt="Download" src="https://repo.billmarssoft.com/api/badge/latest/releases/com/github/webmorph/bootstrap"></a>
 </p>
 
 ---
@@ -38,7 +38,7 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven("https://repo.jyraf.com/repository/maven-public/")
+    maven("https://repo.billmarssoft.com/public/")
 }
 
 dependencies {
@@ -54,9 +54,14 @@ tasks {
             )
         }
         mergeServiceFiles()
+        append("META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports")
+        append("META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.replacements")
     }
     build {
         dependsOn(shadowJar)
+    }
+    withType<JavaCompile> {
+        options.compilerArgs.add("-parameters")
     }
     jar {
         enabled = false
@@ -86,7 +91,7 @@ configurations {
 repositories {
     mavenCentral()
     maven {
-        url 'https://repo.jyraf.com/repository/maven-public/'
+        url 'https://repo.billmarssoft.com/public/'
     }
 }
 
@@ -101,10 +106,16 @@ tasks.named('shadowJar') {
         attributes 'Main-Class': 'com.example.project.Application' // << Main class here
     }
     mergeServiceFiles()
+    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports'
+    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.replacements'
 }
 
 tasks.named('build') {
     dependsOn tasks.named('shadowJar')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += '-parameters'
 }
 
 tasks.named('jar') {
