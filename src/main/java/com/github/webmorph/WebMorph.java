@@ -74,6 +74,20 @@ public class WebMorph {
 
         // Build Spring application context
         WebMorph.context.set((GenericApplicationContext) new SpringApplicationBuilder(WebMorphConfiguration.class, clazz)
+                .contextFactory(webApplicationType -> {
+                    try {
+                        return Reflect.on(switch (webApplicationType) {
+                                    case SERVLET ->
+                                            "org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext";
+                                    case REACTIVE ->
+                                            "org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext";
+                                    case NONE -> "org.springframework.context.support.GenericApplicationContext";
+                                }).getDefaultConstructor().orElseThrow().invoke()
+                                .cast(GenericApplicationContext.class).getValue();
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .headless(true)
                 .bannerMode(Banner.Mode.OFF)
                 .initializers(ctx -> {
