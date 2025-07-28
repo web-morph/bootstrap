@@ -3,6 +3,8 @@ package com.github.webmorph;
 import com.github.webmorph.configuration.WebMorphConfiguration;
 import com.github.webmorph.event.ApplicationContextInitializeEvent;
 import com.github.webmorph.event.MixinTransformerRegistrationEvent;
+import com.github.webmorph.eventbus.EventBus;
+import dev.ckateptb.reflection.Reflect;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.lenni0451.classtransform.TransformerManager;
@@ -11,6 +13,7 @@ import net.lenni0451.classtransform.mixinstranslator.MixinsTranslator;
 import net.lenni0451.reflect.Agents;
 import org.springframework.boot.Banner;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
@@ -86,8 +89,14 @@ public class WebMorph {
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }
-                }, ctx -> new ApplicationContextInitializeEvent((GenericApplicationContext) ctx).dispatch())
+                })
                 .run(args));
+        GenericApplicationContext ctx = WebMorph.context.get();
+        EventBus eventBus = ctx.getBean(EventBus.class);
+        Reflect.on(eventBus).getMethodWithNameAndParameters("init", ApplicationContext.class)
+                .orElseThrow()
+                .invoke(ctx);
+        eventBus.dispatchEvent(new ApplicationContextInitializeEvent(ctx));
 
         // Log registered transformers
         Set<String> transformers = transformer.getRegisteredTransformer();
